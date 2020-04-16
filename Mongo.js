@@ -1,13 +1,19 @@
-var MongoClient = require('mongodb').MongoClient;
+const MongoClient = require("mongodb").MongoClient;
+const assert = require("assert");
 
-var url = "mongodb://localhost:27017/Haywhy";
+const url = "mongodb://localhost:27017";
 
+const movieCollection = require("./interns");
+const findInterns = require("./findInterns");
+const updateInterns = require("./updateInterns");
 MongoClient.connect(url, function(err, db) {
+  if (err) throw err;
 
-if (err) throw err;
-
-console.log("Database created by Haywhy");
-
-db.close();
-
+  movieCollection(db, function() {
+    findInterns(db, function() {
+      updateInterns(db, function() {
+        db.close();
+      });
+    });
+  });
 });
